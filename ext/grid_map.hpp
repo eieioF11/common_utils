@@ -175,4 +175,44 @@ namespace ext {
     int8_t operator()(const Eigen::Vector2d& v) const { return at(v.x(), v.y()); }
     int8_t& operator()(const Eigen::Vector2d& v) { return data[v.y() * col() + v.x()]; }
   };
-} // namespace common_lib
+} // namespace ext
+#ifdef USE_ROS2_OCCUPANCY_GRID
+#include <nav_msgs/msg/occupancy_grid.hpp>
+#include <std_msgs/msg/header.hpp>
+namespace ros2_utils {
+  /**
+   * @brief  nav_msgs::msg::OccupancyGridからGridMapに変換
+   *
+   * @param nav_msgs::msg::OccupancyGrid
+   * @return GridMap
+   */
+  ext::GridMap make_gridmap(const nav_msgs::msg::OccupancyGrid& gmap_msg) {
+    ext::GridMap gmap;
+    gmap.info.resolution = gmap_msg.info.resolution;
+    gmap.info.width      = gmap_msg.info.width;
+    gmap.info.height     = gmap_msg.info.height;
+    gmap.info.origin.x() = gmap_msg.info.origin.position.x;
+    gmap.info.origin.y() = gmap_msg.info.origin.position.y;
+    gmap.info.origin.z() = gmap_msg.info.origin.position.z;
+    return gmap;
+  }
+  /**
+   * @brief  GridMapからnav_msgs::msg::OccupancyGridに変換
+   *
+   * @param GridMap
+   * @return nav_msgs::msg::OccupancyGrid
+   */
+  nav_msgs::msg::OccupancyGrid make_nav_gridmap(std_msgs::msg::Header header, const ext::GridMap& gmap) {
+    nav_msgs::msg::OccupancyGrid gmap_msg;
+    gmap_msg.header                 = header;
+    gmap_msg.info.resolution        = gmap.info.resolution;
+    gmap_msg.info.width             = gmap.info.width;
+    gmap_msg.info.height            = gmap.info.height;
+    gmap_msg.info.origin.position.x = gmap.info.origin.x();
+    gmap_msg.info.origin.position.y = gmap.info.origin.y();
+    gmap_msg.info.origin.position.z = gmap.info.origin.z();
+    gmap_msg.data                   = gmap.data;
+    return gmap_msg;
+  }
+} // namespace ros2_utils
+#endif
