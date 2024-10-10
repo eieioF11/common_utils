@@ -194,6 +194,7 @@ namespace ros2_utils {
     gmap.info.origin.x() = gmap_msg.info.origin.position.x;
     gmap.info.origin.y() = gmap_msg.info.origin.position.y;
     gmap.info.origin.z() = gmap_msg.info.origin.position.z;
+    gmap.data            = gmap_msg.data;
     return gmap;
   }
   /**
