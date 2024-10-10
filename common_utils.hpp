@@ -3,6 +3,7 @@
 #include "utility/math_utils.hpp"
 #include "utility/string_utils.hpp"
 #include "utility/unit_utils.hpp"
+#include "utility/eigen_utils.hpp"
 // ext
 #include "ext/queue.hpp"
 #include "ext/timer.hpp"
