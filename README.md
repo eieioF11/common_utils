@@ -1,9 +1,9 @@
 # common_utils
 ## ファイル構成
-pcl_utility :PCL関連の関数ラッパー
-ros2_utility :ros2関連の関数ラッパー
-utility :数学,文字列操作,単位変換など
-ext : その他拡張ライブラリ等
+- pcl_utility :PCL関連の関数ラッパー
+- ros2_utility :ros2関連の関数ラッパー
+- utility :数学,文字列操作,単位変換など
+- ext : その他拡張ライブラリ等
 
 ## include
 ```C++
