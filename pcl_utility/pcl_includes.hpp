@@ -27,4 +27,3 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/visualization/cloud_viewer.h>
-#include <pcl_conversions/pcl_conversions.h>

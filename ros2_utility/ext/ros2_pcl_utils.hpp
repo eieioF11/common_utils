@@ -8,6 +8,7 @@
 #include "../marker_utils.hpp"
 // pcl
 #include "../../pcl_utility/pcl_includes.hpp"
+#include <pcl_conversions/pcl_conversions.h>
 
 namespace ros2_utils {
   /**
