@@ -221,6 +221,39 @@ namespace ros2_utils {
     return v;
   }
 
+  /**
+   * @brief make_geometry_vector3
+   *
+   * @param v Eigen::VectorX<T>
+   * @return geometry_msgs::msg::Vector3
+   */
+  template <typename T = double>
+  inline geometry_msgs::msg::Vector3 make_geometry_vector3(const Eigen::VectorX<T>& v) {
+    return make_geometry_vector3(v(0), v(1), v(2));
+  }
+
+  /**
+   * @brief make_geometry_vector3
+   *
+   * @param v Eigen::Vector3<T>
+   * @return geometry_msgs::msg::Vector3
+   */
+  template <typename T = double>
+  inline geometry_msgs::msg::Vector3 make_geometry_vector3(const Eigen::Vector3<T>& v) {
+    return make_geometry_vector3(v.x(), v.y(), v.z());
+  }
+
+  /**
+   * @brief make_geometry_vector3
+   *
+   * @param v Eigen::Vector2<T>
+   * @return geometry_msgs::msg::Vector3
+   */
+  template <typename T = double>
+  inline geometry_msgs::msg::Vector3 make_geometry_vector3(const Eigen::Vector2<T>& v) {
+    return make_geometry_vector3(v.x(), v.y(), 0.0);
+  }
+
   // twist
   /**
    * @brief make_geometry_twist
