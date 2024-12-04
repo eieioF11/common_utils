@@ -48,7 +48,7 @@ namespace common_utils {
    * @return bool
    */
   template <class T>
-  constexpr inline bool approx_eq(const Eigen::VectorX<T>& a,const Eigen::VectorX<T>& b, T range = 1e-12) {
+  constexpr inline bool approx_eq(const Eigen::VectorX<T>& a, const Eigen::VectorX<T>& b, T range = 1e-12) {
     return (bool)((a - b).norm() < range);
   }
 } // namespace common_utils

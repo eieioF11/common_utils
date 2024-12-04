@@ -4,6 +4,7 @@
 #include "utility/string_utils.hpp"
 #include "utility/unit_utils.hpp"
 #include "utility/eigen_utils.hpp"
+#include "utility/io_utils.hpp"
 // ros2
 #ifdef USE_ROS2
 #include "ros2_utility/ros2_utils.hpp"
