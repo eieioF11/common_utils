@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -67,9 +68,12 @@ namespace common_utils {
    * @brief Logger
    *
    */
-  class Logger {
-  private:
+  class LoggerBase {
+  protected:
     LogLevel log_level_;
+
+  private:
+    LogLevel out_level_ = LogLevel::DEBUG;
     std::string make_log_level(LogLevel log_level) {
       std::unordered_map<LogLevel, std::string> log_color_map = {
           {LogLevel::DEBUG, LOG_GREEN}, {LogLevel::INFO, LOG_COLOR_RESET}, {LogLevel::WARN, LOG_YELLOW}, {LogLevel::ERROR, LOG_RED}};
@@ -85,9 +89,10 @@ namespace common_utils {
     }
 
   public:
-    Logger() : log_level_(LogLevel::NONE) {}
-    Logger(LogLevel log_level) : log_level_(log_level) {}
-    void set_log_level(LogLevel log_level) { log_level_ = log_level; }
+    LoggerBase() : log_level_(LogLevel::NONE) {}
+    LoggerBase(LogLevel log_level) : log_level_(log_level) {}
+    void set_out_level(LogLevel out_level) { out_level_ = out_level; }
+    virtual void set_log_level(LogLevel log_level) { log_level_ = log_level; }
     /**
      * @brief print
      *
@@ -139,6 +144,48 @@ namespace common_utils {
     }
 
     /**
+     * @brief out
+     *
+     * @return std::ostream&
+     */
+    std::ostream& out() {
+      log_out(out_level_) << make_log_level(out_level_);
+      return log_out(out_level_);
+    }
+  };
+
+  class Logger : public LoggerBase {
+  private:
+    LoggerBase ERROR_;
+    LoggerBase WARN_;
+    LoggerBase INFO_;
+    LoggerBase DEBUG_;
+    LoggerBase NONE_;
+		void init_logger() {
+			ERROR_.set_out_level(LogLevel::ERROR);
+			WARN_.set_out_level(LogLevel::WARN);
+			INFO_.set_out_level(LogLevel::INFO);
+			DEBUG_.set_out_level(LogLevel::DEBUG);
+			NONE_.set_out_level(LogLevel::NONE);
+		}
+  public:
+    Logger() : LoggerBase() {
+			init_logger();
+    }
+    void set_log_level(LogLevel log_level) {
+      log_level_ = log_level;
+      ERROR_.set_log_level(log_level);
+      WARN_.set_log_level(log_level);
+      INFO_.set_log_level(log_level);
+      DEBUG_.set_log_level(log_level);
+      NONE_.set_log_level(log_level);
+    }
+    LoggerBase& ERROR() { return ERROR_; }
+    LoggerBase& WARN() { return WARN_; }
+    LoggerBase& INFO() { return INFO_; }
+    LoggerBase& DEBUG() { return DEBUG_; }
+    LoggerBase& NONE() { return NONE_; }
+    /**
      * @brief endl
      *
      * @return "\033[m\r\n"
@@ -146,7 +193,8 @@ namespace common_utils {
     static constexpr std::string_view endl{"\033[m\r\n"};
   };
 
-  Logger logger(LogLevel::DEBUG);
-  std::ostream& operator<<(std::ostream& os, const LogLevel& log_level) { return logger.out(log_level); }
+  // Logger logger;
+  // std::ostream& operator<<(std::ostream& os, const LogLevel& log_level) { return logger.out(log_level); }
+  std::ostream& operator<<(std::ostream& os, LoggerBase& logger) { return logger.out(); }
 
 } // namespace common_utils
