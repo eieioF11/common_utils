@@ -20,12 +20,7 @@ namespace ext {
       size_ = vq.queue_size();
       data_ = vq.data();
     }
-    // queue(const queue &&vq)
-    // {
-    //     // size_ = std::move();
-    //     // data_ = std::move();
-    //     return *this;
-    // }
+    queue(const queue &&vq) : size_(std::move(vq.size_)), data_(std::move(vq.data_)) {}
     void set_queue_size(size_t size) {
       size_ = size;
       data_.reserve(size);
