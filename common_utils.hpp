@@ -4,7 +4,6 @@
 #include "utility/string_utils.hpp"
 #include "utility/unit_utils.hpp"
 #include "utility/eigen_utils.hpp"
-#include "utility/io_utils.hpp"
 // ros2
 #ifdef USE_ROS2
 #include "ros2_utility/ros2_utils.hpp"
@@ -16,6 +15,7 @@
 #include "pcl_utility/pcl_utils.hpp"
 #endif
 // ext
+#include "ext/logger.hpp"
 #include "ext/queue.hpp"
 #include "ext/timer.hpp"
 #include "ext/grid_map.hpp"
