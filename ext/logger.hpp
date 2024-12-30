@@ -53,7 +53,7 @@ namespace ext {
    */
   class LoggerBase {
   protected:
-    static constexpr const char* COLOR_RESET {"\033[m"};
+    static constexpr const char* COLOR_RESET{"\033[m"};
     static constexpr const char* BLACK{"\e[30m"};
     static constexpr const char* RED{"\e[31m"};
     static constexpr const char* GREEN{"\e[32m"};
@@ -69,16 +69,21 @@ namespace ext {
     std::string make_name_str(const std::string& name) { return "[" + name + "]"; }
 
     std::string make_log_level(LogLevel log_level) {
-      std::unordered_map<LogLevel, std::string> log_color_map = {
-          {LogLevel::DEBUG, LoggerBase::GREEN}, {LogLevel::INFO, LoggerBase::COLOR_RESET}, {LogLevel::WARN, LoggerBase::YELLOW}, {LogLevel::ERROR, LoggerBase::RED}};
-      std::string log = "[" + get_log_level_str(log_level) + "]" + name_ + ": ";
+      std::unordered_map<LogLevel, std::string> log_color_map = {{LogLevel::DEBUG, LoggerBase::GREEN},
+                                                                 {LogLevel::INFO, LoggerBase::COLOR_RESET},
+                                                                 {LogLevel::WARN, LoggerBase::YELLOW},
+                                                                 {LogLevel::ERROR, LoggerBase::RED}};
+      std::string log                                         = "[" + get_log_level_str(log_level) + "]" + name_ + ": ";
       if (log_color_map.find(log_level) != log_color_map.end()) return log_color_map.at(log_level) + log;
       return log;
     }
 
     std::ostream& log_out(LogLevel log_level) {
       int level = static_cast<int>(log_level);
-      if (level >= static_cast<int>(log_level_)) return std::cout;
+      if (level >= static_cast<int>(log_level_)) {
+        if (log_level == LogLevel::ERROR || log_level == LogLevel::WARN) return std::cerr;
+        return std::cout;
+      }
       return dm_cout;
     }
 
@@ -99,7 +104,17 @@ namespace ext {
     LoggerBase(LoggerBase&& logger) : log_level_(std::move(logger.log_level_)), name_(std::move(logger.name_)) {}
     virtual void set_name(std::string name) { name_ = make_name_str(name); }
     virtual void set_log_level(LogLevel log_level) { log_level_ = log_level; }
+    /**
+     * @brief Get name
+     *
+     * @return std::string
+     */
     std::string get_name() { return name_; }
+    /**
+     * @brief Get log level
+     *
+     * @return LogLevel
+     */
     LogLevel get_log_level() { return log_level_; }
   };
 
@@ -156,6 +171,13 @@ namespace ext {
       log_out(out_level_) << make_log_level(out_level_);
       return log_out(out_level_);
     }
+
+    template <class T>
+    std::ostream& operator<<(T v) {
+      std::ostream& os = out();
+      os << v;
+      return os;
+    }
   };
 
   /**
@@ -173,17 +195,15 @@ namespace ext {
   public:
     Logger() : LoggerBase() {}
     Logger(Logger& logger) : LoggerBase(logger.log_level_) { name_ = logger.name_; }
-    Logger(Logger&& logger) : LoggerBase(std::move(logger.log_level_)) {
-      name_      = std::move(logger.name_);
-    }
+    Logger(Logger&& logger) : LoggerBase(std::move(logger.log_level_)) { name_ = std::move(logger.name_); }
 
-    Logger& operator=(const Logger & logger) {
+    Logger& operator=(const Logger& logger) {
       log_level_ = logger.log_level_;
-      name_ = logger.name_;
+      name_      = logger.name_;
     }
-    Logger& operator=(Logger && logger) {
+    Logger& operator=(Logger&& logger) {
       log_level_ = std::move(logger.log_level_);
-      name_ = std::move(logger.name_);
+      name_      = std::move(logger.name_);
     }
 
     /**
@@ -213,10 +233,35 @@ namespace ext {
       DEBUG_.set_log_level(log_level);
       NONE_.set_log_level(log_level);
     }
+    /**
+     * @brief error
+     *
+     * @return LoggerType<LogLevel::ERROR>&
+     */
     LoggerType<LogLevel::ERROR>& ERROR() { return ERROR_; }
+    /**
+     * @brief warn
+     *
+     * @return LoggerType<LogLevel::WARN>&
+     */
     LoggerType<LogLevel::WARN>& WARN() { return WARN_; }
+    /**
+     * @brief info
+     *
+     * @return LoggerType<LogLevel::INFO>&
+     */
     LoggerType<LogLevel::INFO>& INFO() { return INFO_; }
+    /**
+     * @brief debug
+     *
+     * @return LoggerType<LogLevel::DEBUG>&
+     */
     LoggerType<LogLevel::DEBUG>& DEBUG() { return DEBUG_; }
+    /**
+     * @brief none
+     *
+     * @return LoggerType<LogLevel::NONE>&
+     */
     LoggerType<LogLevel::NONE>& NONE() { return NONE_; }
 
     /**
@@ -274,9 +319,23 @@ namespace ext {
     static constexpr std::string_view endl{"\033[m\r\n"};
   };
 
-  template <LogLevel out_level_>
-  std::ostream& operator<<(std::ostream& os, LoggerType<out_level_>& logger) {
-    return logger.out();
+  std::ostream& operator<<(std::ostream& os, LogLevel& log_level) {
+    os << get_log_level_str(log_level);
+    return os;
+  }
+
+  template <LogLevel out_level>
+  std::ostream& operator<<(std::ostream& os, LoggerType<out_level>& logger) {
+    LogLevel level     = logger.get_log_level();
+    LogLevel out_log_level = out_level;
+    os << "Log Level:" << level << "," << "Out Log Level:" << out_log_level;
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, Logger& logger) {
+    LogLevel level = logger.get_log_level();
+    os << "Log Level:" << level;
+    return os;
   }
 
 } // namespace ext
