@@ -7,6 +7,19 @@
 
 namespace pcl_utils {
   // transform
+  /**
+   * @brief transform_cloud
+   *
+   * @tparam POINT_TYPE
+   * @param cloud pcl::PointCloud<POINT_TYPE>
+   * @param x double
+   * @param y double
+   * @param z double
+   * @param roll double
+   * @param pitch double
+   * @param yaw double
+   * @return pcl::PointCloud<POINT_TYPE>
+   */
   template <typename POINT_TYPE = pcl::PointXYZ>
   pcl::PointCloud<POINT_TYPE> transform_cloud(const pcl::PointCloud<POINT_TYPE> &cloud,double x, double y, double z, double roll, double pitch, double yaw)
   {
@@ -16,6 +29,14 @@ namespace pcl_utils {
     return output_cloud;
   }
 
+  // conversion
+  /**
+   * @brief conversion_rgb_cloud
+   *
+   * @tparam POINT_TYPE
+   * @param cloud
+   * @return pcl::PointCloud<pcl::PointXYZRGBA>
+   */
   template <typename POINT_TYPE = pcl::PointXYZ>
   pcl::PointCloud<pcl::PointXYZRGBA> conversion_rgb_cloud(pcl::PointCloud<POINT_TYPE> cloud)
   {
