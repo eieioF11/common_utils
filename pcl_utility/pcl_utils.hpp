@@ -6,6 +6,23 @@
 #include "pcl_includes.hpp"
 
 namespace pcl_utils {
+  // transform
+  template <typename POINT_TYPE = pcl::PointXYZ>
+  pcl::PointCloud<POINT_TYPE> transform_cloud(const pcl::PointCloud<POINT_TYPE> &cloud,double x, double y, double z, double roll, double pitch, double yaw)
+  {
+    pcl::PointCloud<POINT_TYPE> output_cloud;
+    Eigen::Affine3f transformatoin = pcl::getTransformation(x, y, z, roll, pitch, yaw);
+    pcl::transformPointCloud<POINT_TYPE>(cloud, output_cloud, transformatoin);
+    return output_cloud;
+  }
+
+  template <typename POINT_TYPE = pcl::PointXYZ>
+  pcl::PointCloud<pcl::PointXYZRGBA> conversion_rgb_cloud(pcl::PointCloud<POINT_TYPE> cloud)
+  {
+    pcl::PointCloud<pcl::PointXYZRGBA> rgb_cloud;
+    copyPointCloud(cloud, rgb_cloud);
+    return rgb_cloud;
+  }
 
   // extract
   /**
