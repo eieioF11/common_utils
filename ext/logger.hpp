@@ -54,25 +54,24 @@ namespace ext {
   class LoggerBase {
   protected:
     static constexpr const char* COLOR_RESET{"\033[m"};
-    static constexpr const char* BLACK{"\e[30m"};
-    static constexpr const char* RED{"\e[31m"};
-    static constexpr const char* GREEN{"\e[32m"};
-    static constexpr const char* YELLOW{"\e[33m"};
-    static constexpr const char* BLUE{"\e[34m"};
-    static constexpr const char* MAGENTA{"\e[35m"};
-    static constexpr const char* CYAN{"\e[36m"};
-    static constexpr const char* WHITE{"\e[37m"};
-
+    static constexpr const char* ANSI_BLACK{"\e[30m"};
+    static constexpr const char* ANSI_RED{"\e[31m"};
+    static constexpr const char* ANSI_GREEN{"\e[32m"};
+    static constexpr const char* ANSI_YELLOW{"\e[33m"};
+    static constexpr const char* ANSI_BLUE{"\e[34m"};
+    static constexpr const char* ANSI_MAGENTA{"\e[35m"};
+    static constexpr const char* ANSI_CYAN{"\e[36m"};
+    static constexpr const char* ANSI_WHITE{"\e[37m"};
     LogLevel log_level_;
     std::string name_;
 
     std::string make_name_str(const std::string& name) { return "[" + name + "]"; }
 
     std::string make_log_level(LogLevel log_level) {
-      std::unordered_map<LogLevel, std::string> log_color_map = {{LogLevel::DEBUG, LoggerBase::GREEN},
+      std::unordered_map<LogLevel, std::string> log_color_map = {{LogLevel::DEBUG, LoggerBase::ANSI_GREEN},
                                                                  {LogLevel::INFO, LoggerBase::COLOR_RESET},
-                                                                 {LogLevel::WARN, LoggerBase::YELLOW},
-                                                                 {LogLevel::ERROR, LoggerBase::RED}};
+                                                                 {LogLevel::WARN, LoggerBase::ANSI_YELLOW},
+                                                                 {LogLevel::ERROR, LoggerBase::ANSI_RED}};
       std::string log                                         = "[" + get_log_level_str(log_level) + "]" + name_ + ": ";
       if (log_color_map.find(log_level) != log_color_map.end()) return log_color_map.at(log_level) + log;
       return log;

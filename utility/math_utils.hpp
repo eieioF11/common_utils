@@ -11,6 +11,25 @@
 #define M_PI 3.1415926535897932384626433832795
 #endif
 
+#ifdef PI
+  #undef PI
+#endif
+#ifdef HALF_PI
+  #undef HALF_PI
+#endif
+#ifdef TWO_PI
+  #undef TWO_PI
+#endif
+#ifdef DEG_TO_RAD
+  #undef DEG_TO_RAD
+#endif
+#ifdef RAD_TO_DEG
+  #undef RAD_TO_DEG
+#endif
+#ifdef EULER
+  #undef EULER
+#endif
+
 namespace common_utils {
 
   /**
